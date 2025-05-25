@@ -1,0 +1,21 @@
+#!/Users/ivan/websites/mcp/devstandards_mcp/venv/bin/python
+"""DevStandards MCP Server executable"""
+
+import sys
+import os
+from pathlib import Path
+
+# Ensure we know where the project is
+project_root = Path(__file__).parent.absolute()
+os.chdir(project_root)  # Change to project directory
+sys.path.insert(0, str(project_root))
+
+# Set environment variable to help config find the project
+os.environ["DEVSTANDARDS_PROJECT_ROOT"] = str(project_root)
+
+# Import and run the server
+from src.server import main
+import asyncio
+
+if __name__ == "__main__":
+    asyncio.run(main())

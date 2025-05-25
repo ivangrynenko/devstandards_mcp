@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local data
+.env
+data/standards.db
+*.db
+
+# Test files
+test_*.py
+test_*.sh
+demo_*.py
+
+# Backup files
+*.bak
+*.old
+*_old.*
+*_backup.*

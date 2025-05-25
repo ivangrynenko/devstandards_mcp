@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "devstandards": {
+      "command": "python",
+      "args": ["-m", "src.server"],
+      "cwd": "[/Users/[path]/devstandards_mcp]"
+    }
+  }
+}
