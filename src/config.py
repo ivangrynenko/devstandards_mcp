@@ -38,10 +38,8 @@ class Config:
         except:
             pass
         
-        # Method 4: Check if we're in a known location
-        known_path = "/Users/ivan/websites/mcp/devstandards_mcp"
-        if os.path.exists(known_path):
-            return known_path
+        # Method 4: Check common project locations
+        # Removed hardcoded paths - rely on other detection methods
         
         # Method 5: From sys.path if added by the entry script
         for path in sys.path:

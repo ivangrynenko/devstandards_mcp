@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "devstandards": {
+      "command": "/path-to/devstandards_mcp/devstandards-server",
+      "args": [],
+      "env": {},
+      "enabled": true
+    }
+  }
+}

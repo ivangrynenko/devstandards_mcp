@@ -1,21 +1,17 @@
-#!/Users/ivan/websites/mcp/devstandards_mcp/venv/bin/python
-"""DevStandards MCP Server executable"""
+#!/bin/bash
+# DevStandards MCP Server launcher
 
-import sys
-import os
-from pathlib import Path
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Ensure we know where the project is
-project_root = Path(__file__).parent.absolute()
-os.chdir(project_root)  # Change to project directory
-sys.path.insert(0, str(project_root))
+# Activate the virtual environment
+if [ -f "$SCRIPT_DIR/venv/bin/activate" ]; then
+    source "$SCRIPT_DIR/venv/bin/activate"
+else
+    echo "Error: Virtual environment not found at $SCRIPT_DIR/venv" >&2
+    echo "Please run: python -m venv venv && pip install -r requirements.txt" >&2
+    exit 1
+fi
 
-# Set environment variable to help config find the project
-os.environ["DEVSTANDARDS_PROJECT_ROOT"] = str(project_root)
-
-# Import and run the server
-from src.server import main
-import asyncio
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Run the server
+exec python "$SCRIPT_DIR/server.py"

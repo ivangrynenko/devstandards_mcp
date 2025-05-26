@@ -243,14 +243,19 @@ async def handle_call_tool(name: str, arguments: dict) -> list[types.TextContent
 async def main():
     """Run the MCP server"""
     async with stdio_server() as (read_stream, write_stream):
+        # Create initialization options with proper capabilities
+        init_options = InitializationOptions(
+            server_name="devstandards-mcp",
+            server_version=config.VERSION,
+            capabilities={
+                "tools": {}  # Indicate we support tools
+            }
+        )
+        
         await app.run(
             read_stream,
             write_stream,
-            InitializationOptions(
-                server_name="devstandards-mcp",
-                server_version=config.VERSION,
-                capabilities={}
-            )
+            init_options
         )
 
 # For backwards compatibility

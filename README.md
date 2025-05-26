@@ -14,6 +14,20 @@ A Model Context Protocol (MCP) server that provides AI agents with access to dev
   - `get_categories`: List all available categories
   - `get_standard_by_id`: Get details for a specific standard
 
+## Included Standards
+
+The server currently includes 31 Drupal coding standards across these categories:
+
+- **Security** (7 standards): SQL injection, XSS, CSRF, access control, file uploads
+- **Accessibility** (3 standards): Alt text, ARIA attributes, button labels
+- **Performance** (3 standards): Caching strategies, render optimization
+- **Coding Standards** (4 standards): PHP standards, naming conventions
+- **Best Practices** (4 standards): Field API, dependency injection, configuration
+- **JavaScript** (2 standards): Drupal behaviors, jQuery optimization
+- **Forms** (1 standard): Form API best practices
+- **Testing** (1 standard): PHPUnit testing patterns
+- **And more**: Hooks, plugins, Twig templates, routing, API design
+
 ## Installation
 
 1. Clone the repository:
@@ -112,7 +126,9 @@ mkdir data/myplugin
 # Add your CSV file with standards
 ```
 
-## Claude Desktop Configuration
+## MCP Client Configuration
+
+### Claude Desktop
 
 Add this to your Claude Desktop configuration file (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
@@ -128,29 +144,161 @@ Add this to your Claude Desktop configuration file (`~/Library/Application Suppo
 
 After adding the configuration, restart Claude Desktop.
 
-## Example Usage
+### VSCode with Continue.dev
 
-### Get Drupal Security Standards
+[Continue.dev](https://continue.dev) is an AI coding assistant for VSCode that supports MCP servers.
+
+1. Install the Continue extension in VSCode
+2. Open Continue's configuration (`~/.continue/config.json`)
+3. Add the MCP server configuration:
+
+```json
+{
+  "models": [...],
+  "mcpServers": {
+    "devstandards": {
+      "command": "/path/to/devstandards-mcp/devstandards-server"
+    }
+  }
+}
+```
+
+### Cursor Editor
+
+Cursor supports MCP servers through its AI configuration:
+
+1. Open Cursor Settings (Cmd+, on macOS)
+2. Navigate to "AI" → "Model Context Protocol"
+3. Add server configuration:
+
+```json
+{
+  "devstandards": {
+    "command": "/path/to/devstandards-mcp/devstandards-server",
+    "description": "Drupal coding standards and best practices"
+  }
+}
+```
+
+### Zed Editor
+
+For Zed editor with AI assistant features:
+
+1. Open Zed settings (`~/.config/zed/settings.json`)
+2. Add to the assistant configuration:
+
+```json
+{
+  "assistant": {
+    "mcp_servers": {
+      "devstandards": {
+        "command": "/path/to/devstandards-mcp/devstandards-server"
+      }
+    }
+  }
+}
+```
+
+### Generic MCP Client Configuration
+
+For any MCP-compatible client, use these settings:
+
+- **Command**: `/path/to/devstandards-mcp/devstandards-server`
+- **Protocol**: stdio (standard input/output)
+- **Transport**: JSON-RPC over stdio
+- **Initialization**: No special parameters required
+
+### Using with Python Scripts
+
+You can also use the MCP server programmatically:
+
 ```python
-result = await get_standards(
-    category="drupal_security",
-    severity="critical",
-    limit=10
+import subprocess
+import json
+
+# Start the server
+proc = subprocess.Popen(
+    ["/path/to/devstandards-mcp/devstandards-server"],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    text=True
 )
+
+# Send a request
+request = {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+        "name": "get_standards",
+        "arguments": {
+            "category": "drupal_security",
+            "severity": "critical"
+        }
+    },
+    "id": 1
+}
+
+proc.stdin.write(json.dumps(request) + "\n")
+proc.stdin.flush()
+
+# Read response
+response = json.loads(proc.stdout.readline())
+print(response)
 ```
 
-### Search for SQL-related Standards
-```python
-result = await search_standards(
-    query="SQL injection",
-    categories=["drupal_security", "owasp_top_10"]
-)
-```
+### Troubleshooting
 
-### Get All Categories
-```python
-result = await get_categories()
-```
+If you encounter issues:
+
+1. **Check logs**: Most MCP clients provide debug logs
+2. **Test manually**: Run `echo '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}' | ./devstandards-server`
+3. **Verify paths**: Ensure the executable path is correct and the file is executable (`chmod +x devstandards-server`)
+4. **Python environment**: The server uses its own virtual environment, no need to activate it
+
+## Available MCP Tools
+
+Once connected, the following tools are available to AI assistants:
+
+### 1. get_standards
+Query coding standards with filters:
+- **category**: Filter by category (e.g., "drupal_security", "drupal_performance")
+- **subcategory**: Filter by subcategory (e.g., "sql_injection", "xss")
+- **severity**: Filter by severity level ("critical", "high", "medium", "low", "info")
+- **limit**: Maximum number of results (default: 50)
+
+Example query: "Show me all critical security standards for Drupal"
+
+### 2. search_standards
+Full-text search across all standards:
+- **query**: Search text (required)
+- **categories**: List of categories to search within (optional)
+- **tags**: List of tags to filter by (optional)
+- **limit**: Maximum number of results (default: 50)
+
+Example query: "Search for standards about SQL injection"
+
+### 3. get_categories
+List all available categories with descriptions and counts.
+
+Example query: "What categories of standards are available?"
+
+### 4. get_standard_by_id
+Get detailed information about a specific standard:
+- **standard_id**: The unique identifier (e.g., "DS001", "SEC001")
+
+Example query: "Show me details for standard DS001"
+
+## Example Prompts for AI Assistants
+
+When using an MCP client with this server, you can ask:
+
+- "What are the critical security standards I should follow for Drupal?"
+- "Show me best practices for Drupal forms"
+- "Search for standards about caching and performance"
+- "How should I handle user input to prevent XSS attacks?"
+- "What's the proper way to use Drupal's Database API?"
+- "List all accessibility standards"
+- "Show me examples of good vs bad code for SQL queries"
 
 ## Contributing
 

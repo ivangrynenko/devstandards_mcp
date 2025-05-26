@@ -41,3 +41,6 @@ demo_*.py
 *.old
 *_old.*
 *_backup.*
+FRD.md
+.claude/settings.local.json
+scripts/import_final.py
