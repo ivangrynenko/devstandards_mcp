@@ -17,7 +17,7 @@ plugin_manager = PluginManager(
     Path(__file__).parent / "plugins",
     Path(config.DATA_DIR)
 )
-database = StandardsDatabase(Path(config.DATA_DIR) / "standards.db")
+database = StandardsDatabase(Path(config.DATA_DIR))  # Path ignored, uses in-memory storage
 
 # Create MCP server
 app = Server("devstandards-mcp")

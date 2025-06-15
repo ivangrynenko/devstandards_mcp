@@ -8,7 +8,6 @@ setup(
         "mcp>=0.1.0",
         "python-dotenv>=1.0.0",
         "aiohttp>=3.9.0",
-        "aiosqlite>=0.19.0",
         "pandas>=2.0.0",
         "pydantic>=2.0.0",
     ],

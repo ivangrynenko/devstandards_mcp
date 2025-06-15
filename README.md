@@ -5,9 +5,9 @@ A Model Context Protocol (MCP) server that provides AI agents with access to dev
 ## Features
 
 - **Plugin Architecture**: Extensible system for adding new languages and frameworks
-- **Database Backend**: SQLite database for fast querying and caching
-- **CSV Data Import**: Easy-to-manage standards data in CSV format
-- **31 Coding Standards**: Covering security, accessibility, performance, and best practices
+- **In-Memory Storage**: Fast in-memory data store for instant querying
+- **Dynamic CSV Loading**: Automatically loads all CSV files from plugin data directories
+- **235+ Coding Standards**: Comprehensive coverage of security, accessibility, performance, and best practices
 - **MCP Tools**: Four tools for querying standards:
   - `get_standards`: Filter by category, subcategory, and severity
   - `search_standards`: Full-text search across all standards
@@ -16,17 +16,21 @@ A Model Context Protocol (MCP) server that provides AI agents with access to dev
 
 ## Included Standards
 
-The server currently includes 31 Drupal coding standards across these categories:
+The server currently includes 235+ Drupal coding standards across these categories:
 
-- **Security** (7 standards): SQL injection, XSS, CSRF, access control, file uploads
-- **Accessibility** (3 standards): Alt text, ARIA attributes, button labels
-- **Performance** (3 standards): Caching strategies, render optimization
-- **Coding Standards** (4 standards): PHP standards, naming conventions
-- **Best Practices** (4 standards): Field API, dependency injection, configuration
-- **JavaScript** (2 standards): Drupal behaviors, jQuery optimization
-- **Forms** (1 standard): Form API best practices
-- **Testing** (1 standard): PHPUnit testing patterns
-- **And more**: Hooks, plugins, Twig templates, routing, API design
+- **Security** (80+ standards): SQL injection, XSS, CSRF, access control, file uploads, authentication
+- **Coding Standards** (26+ standards): PHP standards, naming conventions, code organization
+- **Best Practices** (17+ standards): Field API, dependency injection, configuration management
+- **Performance** (11+ standards): Caching strategies, render optimization, database queries
+- **Frontend** (16+ standards): Theme development, responsive design, CSS/JS aggregation
+- **Accessibility** (8+ standards): WCAG compliance, ARIA attributes, semantic HTML
+- **JavaScript** (9+ standards): Drupal behaviors, jQuery optimization, ES6 patterns
+- **Testing** (7+ standards): PHPUnit, Behat, functional testing, test coverage
+- **API** (6+ standards): REST, JSON:API, GraphQL best practices
+- **DevOps** (6+ standards): CI/CD, deployment, environment management
+- **Database** (5+ standards): Schema design, migrations, query optimization
+- **Documentation** (7+ standards): Code comments, README files, API documentation
+- **And more**: Git workflows, build processes, integration patterns, Twig templates
 
 ## Installation
 
@@ -85,8 +89,9 @@ devstandards-mcp/
 │   │   ├── base.py        # Base plugin class
 │   │   ├── manager.py     # Plugin manager
 │   │   └── drupal.py      # Drupal standards plugin
-│   └── data/              # Database layer
-│       └── database.py    # SQLite database interface
+│   └── data/              # Data storage layer
+│       ├── database.py    # Compatibility wrapper
+│       └── memory_store.py # In-memory data store
 ├── data/                  # Standards data files
 │   └── drupal/
 │       └── drupal_standards.csv
@@ -99,12 +104,14 @@ devstandards-mcp/
 
 ### 1. Add to Existing Plugin
 
-Edit the CSV file in `data/{plugin_name}/{plugin_name}_standards.csv`:
+Create or edit any CSV file in the plugin's data directory (`data/{plugin_name}/*.csv`). The plugin will automatically load all CSV files:
 
 ```csv
 id,category,subcategory,title,description,severity,examples,references,tags,rationale,fix_guidance
 NEW001,drupal_security,new_issue,New Security Issue,Description here,high,"{""good"": ""example"", ""bad"": ""example""}","[""https://example.com""]",security|new,Why this matters,How to fix it
 ```
+
+**Note**: The Drupal plugin dynamically loads all CSV files from `data/drupal/`, so you can organize standards into multiple files (e.g., `security_standards.csv`, `performance_standards.csv`, etc.)
 
 ### 2. Create a New Plugin
 

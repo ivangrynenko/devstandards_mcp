@@ -55,7 +55,6 @@ class Config:
         
         # Data settings with absolute paths
         self.DATA_DIR = os.getenv("DATA_DIR", os.path.join(project_root, "data"))
-        self.DATABASE_PATH = os.getenv("DATABASE_PATH", os.path.join(project_root, "data", "standards.db"))
         
         # Cache settings
         self.ENABLE_CACHE = os.getenv("ENABLE_CACHE", "true").lower() == "true"
@@ -72,7 +71,6 @@ class Config:
         if os.getenv("DEBUG_MCP", "false").lower() == "true":
             print(f"Project root: {project_root}", file=sys.stderr)
             print(f"Data directory: {self.DATA_DIR}", file=sys.stderr)
-            print(f"Database path: {self.DATABASE_PATH}", file=sys.stderr)
         
         # Ensure directories exist
         try:
@@ -82,5 +80,4 @@ class Config:
             fallback_dir = os.path.expanduser("~/.devstandards-mcp/data")
             print(f"Warning: Could not create data directory at {self.DATA_DIR}, using {fallback_dir}", file=sys.stderr)
             self.DATA_DIR = fallback_dir
-            self.DATABASE_PATH = os.path.join(fallback_dir, "standards.db")
             Path(self.DATA_DIR).mkdir(exist_ok=True, parents=True)

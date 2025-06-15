@@ -28,8 +28,6 @@ Thumbs.db
 
 # Local data
 .env
-data/standards.db
-*.db
 
 # Test files
 test_*.py
