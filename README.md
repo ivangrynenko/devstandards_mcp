@@ -7,7 +7,7 @@ A Model Context Protocol (MCP) server that provides AI agents with access to dev
 - **Plugin Architecture**: Extensible system for adding new languages and frameworks
 - **In-Memory Storage**: Fast in-memory data store for instant querying
 - **Dynamic CSV Loading**: Automatically loads all CSV files from plugin data directories
-- **235+ Coding Standards**: Comprehensive coverage of security, accessibility, performance, and best practices
+- **284+ Coding Standards**: Comprehensive coverage of security, accessibility, performance, and best practices
 - **MCP Tools**: Four tools for querying standards:
   - `get_standards`: Filter by category, subcategory, and severity
   - `search_standards`: Full-text search across all standards
@@ -16,21 +16,30 @@ A Model Context Protocol (MCP) server that provides AI agents with access to dev
 
 ## Included Standards
 
-The server currently includes 235+ Drupal coding standards across these categories:
+The server currently includes 284+ coding standards across these categories:
 
-- **Security** (80+ standards): SQL injection, XSS, CSRF, access control, file uploads, authentication
-- **Coding Standards** (26+ standards): PHP standards, naming conventions, code organization
-- **Best Practices** (17+ standards): Field API, dependency injection, configuration management
-- **Performance** (11+ standards): Caching strategies, render optimization, database queries
-- **Frontend** (16+ standards): Theme development, responsive design, CSS/JS aggregation
-- **Accessibility** (8+ standards): WCAG compliance, ARIA attributes, semantic HTML
-- **JavaScript** (9+ standards): Drupal behaviors, jQuery optimization, ES6 patterns
-- **Testing** (7+ standards): PHPUnit, Behat, functional testing, test coverage
-- **API** (6+ standards): REST, JSON:API, GraphQL best practices
-- **DevOps** (6+ standards): CI/CD, deployment, environment management
-- **Database** (5+ standards): Schema design, migrations, query optimization
-- **Documentation** (7+ standards): Code comments, README files, API documentation
-- **And more**: Git workflows, build processes, integration patterns, Twig templates
+### Drupal Standards (263 standards)
+- **Coding Standards** (130+ standards): PHP standards, PSR-4 compliance, naming conventions, code organization, documentation
+- **Security** (70 standards): SQL injection, XSS, CSRF, access control, file uploads, authentication, input validation
+- **Best Practices** (16 standards): Field API, dependency injection, configuration management, entity handling
+- **Frontend** (11 standards): Theme development, responsive design, CSS/JS aggregation, Twig templates
+- **Accessibility** (8 standards): WCAG compliance, ARIA attributes, semantic HTML, keyboard navigation
+- **Testing** (7 standards): PHPUnit, Behat, functional testing, test coverage, mocking
+- **Documentation** (7 standards): Code comments, README files, API documentation, DocBlocks
+- **API** (6 standards): REST, JSON:API, GraphQL best practices, HTTP methods
+- **Build** (6 standards): Build processes, optimization, asset management
+- **DevOps** (6 standards): CI/CD, deployment, environment management, GitHub Actions
+- **Database** (5 standards): Schema design, migrations, query optimization, Database API
+- **Integration** (5 standards): Third-party integrations, external services, APIs
+- **Git** (4 standards): Git workflows, commit messages, branching strategies
+- **JavaScript** (3 standards): Drupal behaviors, modern JS patterns, optimization
+- **Configuration** (1 standard): Configuration management
+- **Forms** (1 standard): Form API and handling
+- **Hooks** (1 standard): Hook implementations
+- **Twig** (1 standard): Template best practices
+
+### OWASP Standards (20 standards)
+- **OWASP Top 10 2021**: Critical security vulnerabilities including broken access control, cryptographic failures, injection attacks, insecure design, security misconfiguration, vulnerable components, identification failures, software integrity failures, logging failures, and server-side request forgery
 
 ## Installation
 
@@ -93,8 +102,11 @@ devstandards-mcp/
 │       ├── database.py    # Compatibility wrapper
 │       └── memory_store.py # In-memory data store
 ├── data/                  # Standards data files
-│   └── drupal/
-│       └── drupal_standards.csv
+│   ├── drupal/
+│   │   └── drupal_standards.csv
+│   └── owasp/
+│       ├── owasp_top10_2021.csv
+│       └── OWASP_RESOURCES.md
 ├── tests/                 # Test suite
 ├── requirements.txt       # Python dependencies
 └── README.md             # This file
@@ -306,6 +318,9 @@ When using an MCP client with this server, you can ask:
 - "What's the proper way to use Drupal's Database API?"
 - "List all accessibility standards"
 - "Show me examples of good vs bad code for SQL queries"
+- "What are the OWASP Top 10 2021 vulnerabilities and how to prevent them?"
+- "Show me critical security standards across all categories"
+- "Search for standards about broken access control"
 
 ## Contributing
 
