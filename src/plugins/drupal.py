@@ -1,5 +1,6 @@
 import csv
 import json
+import ast
 from pathlib import Path
 from typing import List, Dict
 from .base import StandardsPlugin, Standard
@@ -26,26 +27,65 @@ class DrupalStandardsPlugin(StandardsPlugin):
             "drupal_security": "Security best practices for Drupal",
             "drupal_coding_standards": "Drupal coding conventions and formatting",
             "drupal_best_practices": "Drupal development best practices",
-            "drupal_performance": "Performance optimization guidelines"
+            "drupal_performance": "Performance optimization guidelines",
+            "drupal_javascript": "JavaScript coding standards for Drupal",
+            "drupal_sql": "SQL and database standards for Drupal",
+            "drupal_twig": "Twig template standards for Drupal"
         }
     
     def load_standards(self) -> List[Standard]:
-        """Load standards from CSV file"""
+        """Load standards from multiple CSV files"""
         if self._standards:  # Return cached standards
             return self._standards
-            
-        csv_file = self.data_path / "drupal_standards.csv"
-        if not csv_file.exists():
-            return []
         
+        # List of CSV files to load for Drupal standards
+        csv_files = [
+            "drupal_javascript_standards.csv",
+            "drupal_sql_standards.csv", 
+            "drupal_twig_standards.csv"
+        ]
+        
+        for csv_filename in csv_files:
+            csv_file = self.data_path / "standards" / csv_filename
+            if not csv_file.exists():
+                print(f"Warning: {csv_filename} not found at {csv_file}")
+                continue
+            
+            self._load_csv_file(csv_file)
+        
+        return self._standards
+    
+    def _load_csv_file(self, csv_file: Path):
+        """Load standards from a single CSV file"""
         with open(csv_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 try:
-                    # Parse JSON fields
-                    examples = json.loads(row.get('examples', '{}'))
-                    references = json.loads(row.get('references', '[]'))
-                    tags = [tag.strip() for tag in row.get('tags', '').split('|')]
+                    # Parse JSON and list fields with better error handling
+                    try:
+                        examples = json.loads(row.get('examples', '{}'))
+                    except json.JSONDecodeError as e:
+                        print(f"Error parsing examples for {row.get('id', 'unknown')}: {e}")
+                        print(f"Examples field: {repr(row.get('examples', ''))[:200]}")
+                        continue
+                    
+                    # References are stored as Python list strings in CSV
+                    references_str = row.get('references', '[]')
+                    try:
+                        references = ast.literal_eval(references_str) if references_str.startswith('[') else []
+                    except (ValueError, SyntaxError) as e:
+                        print(f"Error parsing references for {row.get('id', 'unknown')}: {e}")
+                        print(f"References field: {repr(references_str[:200])}")
+                        references = []
+                    
+                    # Tags are stored as Python list strings in CSV
+                    tags_str = row.get('tags', '[]')
+                    try:
+                        tags = ast.literal_eval(tags_str) if tags_str.startswith('[') else [tag.strip() for tag in tags_str.split('|') if tag.strip()]
+                    except (ValueError, SyntaxError) as e:
+                        print(f"Error parsing tags for {row.get('id', 'unknown')}: {e}")
+                        print(f"Tags field: {repr(tags_str[:200])}")
+                        tags = []
                     
                     standard = Standard(
                         id=row['id'],
@@ -70,9 +110,7 @@ class DrupalStandardsPlugin(StandardsPlugin):
                     self._standards.append(standard)
                     
                 except Exception as e:
-                    print(f"Error loading standard {row.get('id', 'unknown')}: {e}")
-        
-        return self._standards
+                    print(f"Error loading standard {row.get('id', 'unknown')} from {csv_file.name}: {e}")
     
     def get_categories(self) -> List[Dict[str, str]]:
         """Get all categories with descriptions"""
